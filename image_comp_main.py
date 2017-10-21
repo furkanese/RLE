@@ -51,8 +51,6 @@ b_col_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_b_col.txt','co
 
 image_codec.save_as_image_rgb(r_col_decoded,g_col_decoded,b_col_decoded,'biber_rgb_col.bmp')
 
-
-
 '''
 GRAY 4 BIT
 '''
@@ -86,9 +84,10 @@ np.savetxt('biber_bw_encode_col.txt', bw_col_encoded, fmt='%d',newline=' ')
 bw_col_decoded = image_codec.decode_image_rowcol('biber_bw_encode_col.txt','col')
 image_codec.save_as_image_gray(bw_col_decoded,'biber_decoded_bw_col.bmp')
 
-# bw_zig, bw_zig_encoded = image_codec.encode_zigzag(color_bw[0])
-# np.savetxt('biber_bw_encode_zigzag.txt', bw_zig_encoded, fmt='%d',newline=' ')
-
+bw_zig, bw_zig_encoded = image_codec.encode_zigzag(color_bw[0])
+np.savetxt('biber_bw_encode_zigzag.txt', bw_zig_encoded, fmt='%d',newline=' ')
+bw_zig_decoded = image_codec.decode_zigzag('biber_bw_encode_zigzag.txt')
+image_codec.save_as_image_gray(bw_zig_decoded,'biber_decoded_bw_zigzag.bmp')
 
 cv2.imshow('bw', im_bw)
 cv2.imshow('image', im_color)

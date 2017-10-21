@@ -61,10 +61,11 @@ def encode_image_rowcol(pixels, rows, columns, encode_type):
     return colors
 
 
-def decode_image_rowcol(filename,encode_type):
+def decode_image_rowcol(filename, encode_type):
     """
     Reads encoded file and decodes it
     :param filename:
+    :param encode_type:
     :return:
     """
     text_file = open(filename, "r")
@@ -84,6 +85,7 @@ def decode_image_rowcol(filename,encode_type):
     remaining_color = int(encoded[0])
     current_pixel = encoded[1]
     rm_index = 0
+
     for i in range(0, im_size):
         # we are looping through the image
         if i % 2 == 0:
@@ -123,44 +125,45 @@ def encode_zigzag(pixels):
     :param pixels:
     :return:
     """
+
+    pixels = squarify_image(pixels)
     zigConverted = []
     encoded_zigzag = []
-
     # zigzag formation to array
-    i = j = bool = 0
+    i = j = indctrl = 0
     zigConverted.append(pixels[i, j])
     j = j + 1
     while i < pixels.shape[0] and j < pixels.shape[1]:  # out of boundary gelirse = silinecek
-        if bool == 0:
+        if indctrl == 0:
             while i >= 0 and pixels.shape[1] > j >= 0:
                 zigConverted.append(pixels[i, j])
                 j = j - 1
                 i = i + 1
             j = 0
-            bool = 1
+            indctrl = 1
         else:
             while pixels.shape[0] > i >= 0 and j >= 0:
                 zigConverted.append(pixels[i, j])
                 j = j + 1
                 i = i - 1
             i = 0
-            bool = 0
-    if bool == 0:
+            indctrl = 0
+    if indctrl == 0:
         i = i + 1
         j = j - 1
     else:
         j = j + 1
         i = i - 1
-    bool = 0
+    indctrl = 0
     while pixels.shape[0] > i >= 0 and pixels.shape[1] > j >= 0:
-        if bool == 0:
+        if indctrl == 0:
             while i < pixels.shape[0] and j < pixels.shape[1]:  # out of boundary gelirse = silinecek
                 zigConverted.append(pixels[i, j])
                 j = j + 1
                 i = i - 1
             j = pixels.shape[1] - 1
             i = i + 2
-            bool = 1
+            indctrl = 1
         else:
             while i < pixels.shape[0] and j < pixels.shape[1]:
                 zigConverted.append(pixels[i, j])
@@ -168,7 +171,7 @@ def encode_zigzag(pixels):
                 i = i + 1
             i = pixels.shape[0] - 1
             j = j + 2
-            bool = 0
+            indctrl = 0
 
     # encoding
     prev_color = 255  # first color taken as white
@@ -190,6 +193,112 @@ def encode_zigzag(pixels):
     return zigConverted, encoded_zigzag
 
 
+def decode_zigzag(filename):
+    """
+    Decodes given zigzag filename
+    :param filename:
+    :return:
+    """
+    text_file = open(filename, "r")
+    lines = text_file.read().split(' ')
+    sz = np.shape(lines)
+    cnt = 0
+    encoded = []
+    for i in range(0, sz[0]):
+        # count image size and take clean pixel values
+        if (i % 2 == 0) & (lines[i] != ''):
+            cnt += np.int(lines[i])
+        if lines[i] != '':
+            encoded.append(lines[i])
+
+    im_size = int(np.sqrt(cnt))
+    pixels = np.zeros([im_size, im_size], dtype=int)  # initialize new pixel matrix
+
+    zigConverted = []
+    # zigzag formation to array
+    i = j = indctrl = 0
+    zigConverted.append(pixels[i, j])
+
+    pixels[0][0] = 255
+    remaining_color = int(encoded[2])
+    current_pixel = encoded[3]
+    rm_index = 2
+
+    j = j + 1
+    while i < im_size and j < im_size:  # out of boundary gelirse = silinecek
+        if indctrl == 0:
+            while i >= 0 and im_size > j >= 0:
+                pixels[i][j] = current_pixel
+                if (remaining_color - 1) == 0:
+                    rm_index += 2
+                    if rm_index >= len(encoded):
+                        break
+                    remaining_color = int(encoded[rm_index])
+                    current_pixel = encoded[rm_index + 1]
+                else:
+                    remaining_color -= 1
+                j = j - 1
+                i = i + 1
+            j = 0
+            indctrl = 1
+        else:
+            while im_size > i >= 0 and j >= 0:
+                pixels[i][j] = current_pixel
+                if (remaining_color - 1) == 0:
+                    rm_index += 2
+                    if rm_index >= len(encoded):
+                        break
+                    remaining_color = int(encoded[rm_index])
+                    current_pixel = encoded[rm_index + 1]
+                else:
+                    remaining_color -= 1
+                j = j + 1
+                i = i - 1
+            i = 0
+            indctrl = 0
+    if indctrl == 0:
+        i = i + 1
+        j = j - 1
+    else:
+        j = j + 1
+        i = i - 1
+    indctrl = 0
+    while im_size > i >= 0 and im_size > j >= 0:
+        if indctrl == 0:
+            while i < im_size and j < im_size:  # out of boundary gelirse = silinecek
+                pixels[i][j] = current_pixel
+                if (remaining_color - 1) == 0:
+                    rm_index += 2
+                    if rm_index >= len(encoded):
+                        break
+                    remaining_color = int(encoded[rm_index])
+                    current_pixel = encoded[rm_index + 1]
+                else:
+                    remaining_color -= 1
+                j = j + 1
+                i = i - 1
+            j = im_size - 1
+            i = i + 2
+            indctrl = 1
+        else:
+            while i < im_size and j < im_size:
+                pixels[i][j] = current_pixel
+                if (remaining_color - 1) == 0:
+                    rm_index += 2
+                    if rm_index >= len(encoded):
+                        break
+                    remaining_color = int(encoded[rm_index])
+                    current_pixel = encoded[rm_index + 1]
+                else:
+                    remaining_color -= 1
+                j = j - 1
+                i = i + 1
+            i = im_size - 1
+            j = j + 2
+            indctrl = 0
+    return pixels
+
+
 def squarify_image(pixels):
     """
     Makes the given array into a square one
@@ -197,7 +306,6 @@ def squarify_image(pixels):
     :return:
     """
     padded_pixels = pixels.copy()
-    print(np.shape(padded_pixels))
     rows, columns = np.shape(padded_pixels)
     sz = np.abs(rows - columns)
 
@@ -211,8 +319,6 @@ def squarify_image(pixels):
         # add new rows to image
         new_row = np.zeros([sz, columns], dtype=int)
         padded_pixels = np.vstack([padded_pixels, new_row])
-
-    print(np.shape(padded_pixels))
     return padded_pixels
 
 
