@@ -12,16 +12,18 @@ import numpy as np
 import image_codec
 
 
+im_color = cv2.imread('biber.bmp')
+im_bw = cv2.imread('res_bw.bmp',0)
+im_grayscale = cv2.imread('result_grayscale4.bmp',0)
+
 '''
 COLOR
 '''
-im_color = cv2.imread('biber.bmp')
 color_b,color_g,color_r = cv2.split(im_color)
 (rgb_row, rgb_col) = np.shape(color_b)
 
 # ROW
-
-r_row_encoded = image_codec.encode_image_rowcol(color_b, rgb_row, rgb_col, 'row')
+r_row_encoded = image_codec.encode_image_rowcol(color_r, rgb_row, rgb_col, 'row')
 np.savetxt('biber_rgb_encode_r_row.txt', r_row_encoded, fmt='%d',newline=' ')
 g_row_encoded = image_codec.encode_image_rowcol(color_g, rgb_row, rgb_col, 'row')
 np.savetxt('biber_rgb_encode_g_row.txt', g_row_encoded, fmt='%d',newline=' ')
@@ -36,7 +38,7 @@ image_codec.save_as_image_rgb(r_row_decoded,g_row_decoded,b_row_decoded,'biber_r
 
 # COLUMN
 
-r_col_encoded = image_codec.encode_image_rowcol(color_b, rgb_row, rgb_col, 'col')
+r_col_encoded = image_codec.encode_image_rowcol(color_r, rgb_row, rgb_col, 'col')
 np.savetxt('biber_rgb_encode_r_col.txt', r_col_encoded, fmt='%d',newline=' ')
 g_col_encoded = image_codec.encode_image_rowcol(color_g, rgb_row, rgb_col, 'col')
 np.savetxt('biber_rgb_encode_g_col.txt', g_col_encoded, fmt='%d',newline=' ')
@@ -47,14 +49,13 @@ r_col_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_r_col.txt','co
 g_col_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_g_col.txt','col')
 b_col_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_b_col.txt','col')
 
-image_codec.save_as_image_rgb(r_col_decoded,g_col_decoded,b_col_encoded,'biber_rgb_row.bmp')
+image_codec.save_as_image_rgb(r_col_decoded,g_col_decoded,b_col_decoded,'biber_rgb_col.bmp')
 
 
 
 '''
 GRAY 4 BIT
 '''
-im_grayscale = cv2.imread('result_grayscale4.bmp',0)
 color_gray = cv2.split(im_grayscale)
 (g_channel,g_row, g_col) = np.shape(color_gray)
 
@@ -72,7 +73,6 @@ image_codec.save_as_image_gray(bw_col_decoded,'biber_decoded_gray_col.bmp')
 BLACK AND WHITE
 '''
 # (thresh, im_bw) = cv2.threshold(im_grayscale, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-im_bw = cv2.imread('res_bw.bmp',0)
 color_bw = cv2.split(im_bw)
 (bw_channel, bw_row, bw_col) = np.shape(color_bw)
 

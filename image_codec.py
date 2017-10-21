@@ -200,6 +200,9 @@ def squarify_image(pixels):
     print(np.shape(padded_pixels))
     rows, columns = np.shape(padded_pixels)
     sz = np.abs(rows - columns)
+
+    if rows == columns:
+        return pixels
     if rows > columns:
         # add new columns to image
         new_col = np.zeros([rows, sz], dtype=int)
@@ -229,6 +232,7 @@ def save_as_image_gray(pixels,image_name):
             img[i][j][2] = pixels[i][j]
     scipy.misc.imsave(image_name, img)
 
+
 def save_as_image_rgb(pixels_red,pixel_green,pixel_blue,image_name):
     """
     Saves an image with given pixel values
@@ -237,9 +241,9 @@ def save_as_image_rgb(pixels_red,pixel_green,pixel_blue,image_name):
     :return:
     """
     rows, columns = np.shape(pixels_red)
-    img = np.zeros((rows, columns, 3), dtype=np.uint8)
+    img = np.zeros((rows, columns, 3), dtype=int)
     for i in range(0, rows):
-        for j in range(0,columns):
+        for j in range(0, columns):
             img[i][j][0] = pixels_red[i][j]
             img[i][j][1] = pixel_green[i][j]
             img[i][j][2] = pixel_blue[i][j]
