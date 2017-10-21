@@ -27,7 +27,7 @@ def encode_image_rowcol(pixels, rows, columns, encode_type):
         # we are looping through the image
         if i % 2 == 0:
             for j in range(0, inner_index):
-                if not (i == 0) & (j == 0):  # we do not control the first pixel of image
+                if not (i == 0) and (j == 0):  # we do not control the first pixel of image
                     if encode_type == 'row':
                         next_color = pixels[i][j]
                     else:
@@ -42,7 +42,7 @@ def encode_image_rowcol(pixels, rows, columns, encode_type):
                         cntr = 1
         else:
             for j in range(inner_index - 1, -1, -1):
-                if not (i == 0) & (j == 0):  # we do not control the first pixel of image
+                if not (i == 0) and (j == 0):  # we do not control the first pixel of image
                     if encode_type == 'row':
                         next_color = pixels[i][j]
                     else:
@@ -75,7 +75,7 @@ def decode_image_rowcol(filename, encode_type):
     encoded = []
     for i in range(0, sz[0]):
         # count image size and take clean pixel values
-        if (i % 2 == 0) & (lines[i] != ''):
+        if (i % 2 == 0) and (lines[i] != ''):
             cnt += np.int(lines[i])
         if lines[i] != '':
             encoded.append(lines[i])
@@ -206,7 +206,7 @@ def decode_zigzag(filename):
     encoded = []
     for i in range(0, sz[0]):
         # count image size and take clean pixel values
-        if (i % 2 == 0) & (lines[i] != ''):
+        if (i % 2 == 0) and (lines[i] != ''):
             cnt += np.int(lines[i])
         if lines[i] != '':
             encoded.append(lines[i])
