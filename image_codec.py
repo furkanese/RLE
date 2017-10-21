@@ -126,7 +126,9 @@ def encode_zigzag(pixels):
             encoded_zigzag.append(prev_color)
             prev_color = next_color
             cntr = 1
-
+        # we add the last portion manually
+    encoded_zigzag.append(cntr)
+    encoded_zigzag.append(prev_color)
     # print(zigConverted)
     # print(len(zigConverted))
     return zigConverted, encoded_zigzag
