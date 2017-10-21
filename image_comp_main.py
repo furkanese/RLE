@@ -51,6 +51,21 @@ b_col_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_b_col.txt','co
 
 image_codec.save_as_image_rgb(r_col_decoded,g_col_decoded,b_col_decoded,'biber_rgb_col.bmp')
 
+# ZIG ZAG
+
+r_zig, r_zig_encoded = image_codec.encode_zigzag(color_r)
+np.savetxt('biber_r_encode_zigzag.txt', r_zig_encoded, fmt='%d',newline=' ')
+g_zig, g_zig_encoded = image_codec.encode_zigzag(color_g)
+np.savetxt('biber_g_encode_zigzag.txt', g_zig_encoded, fmt='%d',newline=' ')
+b_zig, b_zig_encoded = image_codec.encode_zigzag(color_b)
+np.savetxt('biber_b_encode_zigzag.txt', b_zig_encoded, fmt='%d',newline=' ')
+
+r_zig_decoded = image_codec.decode_zigzag('biber_r_encode_zigzag.txt')
+g_zig_decoded = image_codec.decode_zigzag('biber_g_encode_zigzag.txt')
+b_zig_decoded = image_codec.decode_zigzag('biber_b_encode_zigzag.txt')
+
+image_codec.save_as_image_rgb(r_zig_decoded,g_zig_decoded,b_zig_decoded,'biber_decoded_rgb_zigzag.bmp')
+
 '''
 GRAY 4 BIT
 '''
