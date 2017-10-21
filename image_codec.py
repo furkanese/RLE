@@ -6,13 +6,13 @@ import scipy
 
 
 def encode_image_rowcol(pixels, rows, columns, encode_type):
-    '''
+    """
     :param pixels: pixels of the image
     :param rows: row size
     :param columns: column size
     :param encode_type: row wise or column wise
     :return: encoded array
-    '''
+    """
     colors = []
     prev_color = 255  # first color taken as white
     cntr = 1
@@ -70,7 +70,6 @@ def encode_zigzag(pixels):
     zigConverted = []
     encoded_zigzag = []
 
-
     # zigzag formation to array
     i = j = bool = 0
     zigConverted.append(pixels[i, j])
@@ -120,7 +119,6 @@ def encode_zigzag(pixels):
     cntr = 1
     for i in range (1,len(zigConverted)):
         next_color = zigConverted[i]
-
         if next_color == prev_color:
             cntr += 1
         else:
@@ -132,6 +130,7 @@ def encode_zigzag(pixels):
     # print(zigConverted)
     # print(len(zigConverted))
     return zigConverted, encoded_zigzag
+
 
 def squarify_image(pixels):
     """

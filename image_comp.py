@@ -48,10 +48,7 @@ color_bw = cv2.split(im_bw)
 
 bw_zig, bw_zig_encoded = image_codec.encode_zigzag(color_bw[0])
 np.savetxt('biber_bw_encode_zigzag.txt', bw_zig_encoded, fmt='%d',newline=' ')
-print(bw_zig)
-print(len(bw_zig))
-print(bw_zig_encoded)
-print(len(bw_zig_encoded))
+
 
 cv2.imshow('bw', im_bw)
 cv2.imshow('image', im_color)
