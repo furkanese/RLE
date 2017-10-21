@@ -2,6 +2,8 @@
 Encode and Decode image
 """
 import numpy as np
+import scipy
+
 
 def encode_image(pixels, rows, columns, encode_type):
     '''
@@ -56,8 +58,8 @@ def encode_image(pixels, rows, columns, encode_type):
     # we add the last portion manually
     colors.append(cntr)
     colors.append(prev_color)
-
     return colors
+
 
 def squarify_image(pixels):
     """
@@ -70,14 +72,32 @@ def squarify_image(pixels):
     rows, columns = np.shape(padded_pixels)
     sz = np.abs(rows - columns)
     if rows > columns:
+        # add new columns to image
         new_col = np.zeros([rows, sz], dtype=int)
         padded_pixels = np.hstack(padded_pixels, new_col)
     else:
+        # add new rows to image
         new_row = np.zeros([sz, columns], dtype=int)
         padded_pixels = np.vstack([padded_pixels, new_row])
 
     print(np.shape(padded_pixels))
     return padded_pixels
 
+
+def save_as_image_gray(pixels):
+    """
+    Saves an image with given pixel values
+    ONLY BW AND GRAYSCALE
+    :param pixels:
+    :return:
+    """
+    rows, columns = np.shape(pixels)
+    img = np.zeros((rows, columns, 3), dtype=np.uint8)
+    for i in range(0, rows):
+        for j in range(0,columns):
+            img[i][j][0] = pixels[i][j]
+            img[i][j][1] = pixels[i][j]
+            img[i][j][2] = pixels[i][j]
+    scipy.misc.imsave('deneme.bmp', img)
 
 
