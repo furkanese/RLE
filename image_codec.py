@@ -2,7 +2,7 @@
 Encode and Decode image
 """
 import numpy as np
-import scipy
+import scipy.misc
 
 
 def encode_image_rowcol(pixels, rows, columns, encode_type):
@@ -59,6 +59,62 @@ def encode_image_rowcol(pixels, rows, columns, encode_type):
     colors.append(cntr)
     colors.append(prev_color)
     return colors
+
+
+def decode_image_rowcol(filename,encode_type):
+    """
+    Reads encoded file and decodes it
+    :param filename:
+    :return:
+    """
+    text_file = open(filename, "r")
+    lines = text_file.read().split(' ')
+    sz = np.shape(lines)
+    cnt = 0
+    encoded = []
+    for i in range(0, sz[0]):
+        # count image size and take clean pixel values
+        if (i % 2 == 0) & (lines[i] != ''):
+            cnt += np.int(lines[i])
+        if lines[i] != '':
+            encoded.append(lines[i])
+
+    im_size = int(np.sqrt(cnt))
+    pixels = np.zeros([im_size, im_size], dtype=int)  # initialize new pixel matrix
+    remaining_color = int(encoded[0])
+    current_pixel = encoded[1]
+    rm_index = 0
+    for i in range(0, im_size):
+        # we are looping through the image
+        if i % 2 == 0:
+            for j in range(0, im_size):
+                if encode_type == 'row':
+                    pixels[i][j] = current_pixel
+                else:
+                    pixels[j][i] = current_pixel
+                if (remaining_color - 1) == 0:
+                    rm_index += 2
+                    if rm_index >= len(encoded):
+                        break
+                    remaining_color = int(encoded[rm_index])
+                    current_pixel = encoded[rm_index + 1]
+                else:
+                    remaining_color -= 1
+        else:
+            for j in range(im_size - 1, -1, -1):
+                if encode_type == 'row':
+                    pixels[i][j] = current_pixel
+                else:
+                    pixels[j][i] = current_pixel
+                if (remaining_color - 1) == 0:
+                    rm_index += 2
+                    if rm_index >= len(encoded):
+                        break
+                    remaining_color = int(encoded[rm_index])
+                    current_pixel = encoded[rm_index + 1]
+                else:
+                    remaining_color -= 1
+    return pixels
 
 
 def encode_zigzag(pixels):
@@ -157,7 +213,7 @@ def squarify_image(pixels):
     return padded_pixels
 
 
-def save_as_image_gray(pixels):
+def save_as_image_gray(pixels,image_name):
     """
     Saves an image with given pixel values
     ONLY BW AND GRAYSCALE
@@ -171,6 +227,6 @@ def save_as_image_gray(pixels):
             img[i][j][0] = pixels[i][j]
             img[i][j][1] = pixels[i][j]
             img[i][j][2] = pixels[i][j]
-    scipy.misc.imsave('deneme.bmp', img)
+    scipy.misc.imsave(image_name, img)
 
 

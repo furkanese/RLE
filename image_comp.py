@@ -40,14 +40,18 @@ im_bw = cv2.imread('res_bw.bmp',0)
 color_bw = cv2.split(im_bw)
 (bw_channel, bw_row, bw_col) = np.shape(color_bw)
 
-# bw_row_encoded = image_codec.encode_image_rowcol(color_bw[0], bw_row, bw_col, 'row')
-# np.savetxt('biber_bw_encode_row.txt', bw_row_encoded, fmt='%d',newline=' ')
-#
-# bw_col_encoded = image_codec.encode_image_rowcol(color_bw[0], bw_row, bw_col, 'col')
-# np.savetxt('biber_bw_encode_col.txt', bw_col_encoded, fmt='%d',newline=' ')
+bw_row_encoded = image_codec.encode_image_rowcol(color_bw[0], bw_row, bw_col, 'row')
+np.savetxt('biber_bw_encode_row.txt', bw_row_encoded, fmt='%d',newline=' ')
+bw_row_decoded = image_codec.decode_image_rowcol('biber_bw_encode_row.txt','row')
+image_codec.save_as_image_gray(bw_row_decoded,'biber_decoded_row.bmp')
 
-bw_zig, bw_zig_encoded = image_codec.encode_zigzag(color_bw[0])
-np.savetxt('biber_bw_encode_zigzag.txt', bw_zig_encoded, fmt='%d',newline=' ')
+bw_col_encoded = image_codec.encode_image_rowcol(color_bw[0], bw_row, bw_col, 'col')
+np.savetxt('biber_bw_encode_col.txt', bw_col_encoded, fmt='%d',newline=' ')
+bw_col_decoded = image_codec.decode_image_rowcol('biber_bw_encode_col.txt','col')
+image_codec.save_as_image_gray(bw_col_decoded,'biber_decoded_col.bmp')
+
+# bw_zig, bw_zig_encoded = image_codec.encode_zigzag(color_bw[0])
+# np.savetxt('biber_bw_encode_zigzag.txt', bw_zig_encoded, fmt='%d',newline=' ')
 
 
 cv2.imshow('bw', im_bw)
