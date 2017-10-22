@@ -13,7 +13,11 @@ def encode_image_rowcol(pixels, rows, columns, encode_type):
     :param encode_type: row wise or column wise
     :return: encoded array
     """
+
     colors = []
+    colors.append(rows)
+    colors.append(columns)
+
     prev_color = 255  # first color taken as white
     cntr = 1
     if encode_type == 'row':
@@ -73,23 +77,35 @@ def decode_image_rowcol(filename, encode_type):
     sz = np.shape(lines)
     cnt = 0
     encoded = []
-    for i in range(0, sz[0]):
+    for i in range(2, sz[0]):
         # count image size and take clean pixel values
-        if (i % 2 == 0) & (lines[i] != ''):
-            cnt += np.int(lines[i])
+        # if (i % 2 == 0) & (lines[i] != ''):
+        #     cnt += np.int(lines[i])
         if lines[i] != '':
             encoded.append(lines[i])
 
-    im_size = int(np.sqrt(cnt))
-    pixels = np.zeros([im_size, im_size], dtype=int)  # initialize new pixel matrix
+    # im_size = int(np.sqrt(cnt)) # image has to be squared
+    rows = int(lines[0])
+    columns = int(lines[1])
+
+    if encode_type == 'row':
+        outer_index = rows
+        inner_index = columns
+    else:
+        outer_index = columns
+        inner_index = rows
+
+    # pixels = np.zeros([im_size, im_size], dtype=int)  # initialize new pixel matrix
+    pixels = np.zeros([rows, columns], dtype=int)  # initialize new pixel matrix
+
     remaining_color = int(encoded[0])
     current_pixel = encoded[1]
     rm_index = 0
 
-    for i in range(0, im_size):
+    for i in range(0, outer_index):
         # we are looping through the image
         if i % 2 == 0:
-            for j in range(0, im_size):
+            for j in range(0, inner_index):
                 if encode_type == 'row':
                     pixels[i][j] = current_pixel
                 else:
@@ -103,7 +119,7 @@ def decode_image_rowcol(filename, encode_type):
                 else:
                     remaining_color -= 1
         else:
-            for j in range(im_size - 1, -1, -1):
+            for j in range(inner_index - 1, -1, -1):
                 if encode_type == 'row':
                     pixels[i][j] = current_pixel
                 else:
@@ -214,15 +230,19 @@ def decode_zigzag(filename):
     im_size = int(np.sqrt(cnt))
     pixels = np.zeros([im_size, im_size], dtype=int)  # initialize new pixel matrix
 
-    zigConverted = []
     # zigzag formation to array
     i = j = indctrl = 0
-    zigConverted.append(pixels[i, j])
+
 
     pixels[0][0] = 255
-    remaining_color = int(encoded[2])
-    current_pixel = encoded[3]
-    rm_index = 2
+    remaining_color = int(encoded[0])-1
+    current_pixel = int(encoded[1])
+    if remaining_color == 0:
+        remaining_color = int(encoded[2])
+        current_pixel = int(encoded[3])
+        rm_index = 2
+    else:
+        rm_index = 0
 
     j = j + 1
     while i < im_size and j < im_size:  # out of boundary gelirse = silinecek
