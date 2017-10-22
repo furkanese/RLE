@@ -15,6 +15,8 @@ import image_codec
 im_color = cv2.imread('biber.bmp')
 im_bw = cv2.imread('res_bw.bmp',0)
 im_grayscale = cv2.imread('result_grayscale4.bmp',0)
+encoded_shapes = []
+original_shapes = []
 
 '''
 COLOR
@@ -22,65 +24,88 @@ COLOR
 color_b,color_g,color_r = cv2.split(im_color)
 (rgb_row, rgb_col) = np.shape(color_b)
 
+original_shapes.append(rgb_row * rgb_col * 3)
+
 # ROW
 r_row_encoded = image_codec.encode_image_rowcol(color_r, rgb_row, rgb_col, 'row')
-np.savetxt('biber_rgb_encode_r_row.txt', r_row_encoded, fmt='%d',newline=' ')
+np.savetxt('biber/biber_rgb_encode_r_row.txt', r_row_encoded, fmt='%d',newline=' ')
 g_row_encoded = image_codec.encode_image_rowcol(color_g, rgb_row, rgb_col, 'row')
-np.savetxt('biber_rgb_encode_g_row.txt', g_row_encoded, fmt='%d',newline=' ')
+np.savetxt('biber/biber_rgb_encode_g_row.txt', g_row_encoded, fmt='%d',newline=' ')
 b_row_encoded = image_codec.encode_image_rowcol(color_b, rgb_row, rgb_col, 'row')
-np.savetxt('biber_rgb_encode_b_row.txt', b_row_encoded, fmt='%d',newline=' ')
+np.savetxt('biber/biber_rgb_encode_b_row.txt', b_row_encoded, fmt='%d',newline=' ')
 
-r_row_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_r_row.txt','row')
-g_row_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_g_row.txt','row')
-b_row_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_b_row.txt','row')
+encoded_shapes.append(len(b_row_encoded) + len(g_row_encoded) + len(r_row_encoded))
 
-image_codec.save_as_image_rgb(r_row_decoded,g_row_decoded,b_row_decoded,'biber_rgb_row.bmp')
+r_row_decoded = image_codec.decode_image_rowcol('biber/biber_rgb_encode_r_row.txt','row')
+g_row_decoded = image_codec.decode_image_rowcol('biber/biber_rgb_encode_g_row.txt','row')
+b_row_decoded = image_codec.decode_image_rowcol('biber/biber_rgb_encode_b_row.txt','row')
+
+image_codec.save_as_image_rgb(r_row_decoded,g_row_decoded,b_row_decoded,'biber/biber_rgb_row.bmp')
 
 # COLUMN
 
 r_col_encoded = image_codec.encode_image_rowcol(color_r, rgb_row, rgb_col, 'col')
-np.savetxt('biber_rgb_encode_r_col.txt', r_col_encoded, fmt='%d',newline=' ')
+np.savetxt('biber/biber_rgb_encode_r_col.txt', r_col_encoded, fmt='%d',newline=' ')
 g_col_encoded = image_codec.encode_image_rowcol(color_g, rgb_row, rgb_col, 'col')
-np.savetxt('biber_rgb_encode_g_col.txt', g_col_encoded, fmt='%d',newline=' ')
+np.savetxt('biber/biber_rgb_encode_g_col.txt', g_col_encoded, fmt='%d',newline=' ')
 b_col_encoded = image_codec.encode_image_rowcol(color_b, rgb_row, rgb_col, 'col')
-np.savetxt('biber_rgb_encode_b_col.txt', b_col_encoded, fmt='%d',newline=' ')
+np.savetxt('biber/biber_rgb_encode_b_col.txt', b_col_encoded, fmt='%d',newline=' ')
 
-r_col_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_r_col.txt','col')
-g_col_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_g_col.txt','col')
-b_col_decoded = image_codec.decode_image_rowcol('biber_rgb_encode_b_col.txt','col')
+encoded_shapes.append(len(b_col_encoded) + len(r_col_encoded) + len(g_col_encoded))
 
-image_codec.save_as_image_rgb(r_col_decoded,g_col_decoded,b_col_decoded,'biber_rgb_col.bmp')
+r_col_decoded = image_codec.decode_image_rowcol('biber/biber_rgb_encode_r_col.txt','col')
+g_col_decoded = image_codec.decode_image_rowcol('biber/biber_rgb_encode_g_col.txt','col')
+b_col_decoded = image_codec.decode_image_rowcol('biber/biber_rgb_encode_b_col.txt','col')
+
+image_codec.save_as_image_rgb(r_col_decoded,g_col_decoded,b_col_decoded,'biber/biber_rgb_col.bmp')
 
 # ZIG ZAG
 
 r_zig, r_zig_encoded = image_codec.encode_zigzag(color_r)
-np.savetxt('biber_r_encode_zigzag.txt', r_zig_encoded, fmt='%d',newline=' ')
+np.savetxt('biber/biber_r_encode_zigzag.txt', r_zig_encoded, fmt='%d',newline=' ')
 g_zig, g_zig_encoded = image_codec.encode_zigzag(color_g)
-np.savetxt('biber_g_encode_zigzag.txt', g_zig_encoded, fmt='%d',newline=' ')
+np.savetxt('biber/biber_g_encode_zigzag.txt', g_zig_encoded, fmt='%d',newline=' ')
 b_zig, b_zig_encoded = image_codec.encode_zigzag(color_b)
-np.savetxt('biber_b_encode_zigzag.txt', b_zig_encoded, fmt='%d',newline=' ')
+np.savetxt('biber/biber_b_encode_zigzag.txt', b_zig_encoded, fmt='%d',newline=' ')
 
-r_zig_decoded = image_codec.decode_zigzag('biber_r_encode_zigzag.txt')
-g_zig_decoded = image_codec.decode_zigzag('biber_g_encode_zigzag.txt')
-b_zig_decoded = image_codec.decode_zigzag('biber_b_encode_zigzag.txt')
+encoded_shapes.append(len(b_zig_encoded) + len(g_zig_encoded) + len(r_zig_encoded))
 
-image_codec.save_as_image_rgb(r_zig_decoded,g_zig_decoded,b_zig_decoded,'biber_decoded_rgb_zigzag.bmp')
+
+r_zig_decoded = image_codec.decode_zigzag('biber/biber_r_encode_zigzag.txt')
+g_zig_decoded = image_codec.decode_zigzag('biber/biber_g_encode_zigzag.txt')
+b_zig_decoded = image_codec.decode_zigzag('biber/biber_b_encode_zigzag.txt')
+
+image_codec.save_as_image_rgb(r_zig_decoded,g_zig_decoded,b_zig_decoded,'biber/biber_decoded_rgb_zigzag.bmp')
 
 '''
 GRAY 4 BIT
 '''
 color_gray = cv2.split(im_grayscale)
 (g_channel,g_row, g_col) = np.shape(color_gray)
+original_shapes.append(rgb_row * rgb_col * 1)
 
 gray_row_encoded = image_codec.encode_image_rowcol(color_gray[0], g_row, g_col, 'row')
-np.savetxt('biber_gray_encode_row.txt', gray_row_encoded, fmt='%d',newline=' ')
-bw_row_decoded = image_codec.decode_image_rowcol('biber_gray_encode_row.txt','row')
-image_codec.save_as_image_gray(bw_row_decoded,'biber_decoded_gray_row.bmp')
+np.savetxt('biber/biber_gray_encode_row.txt', gray_row_encoded, fmt='%d',newline=' ')
+gray_row_decoded = image_codec.decode_image_rowcol('biber/biber_gray_encode_row.txt','row')
+image_codec.save_as_image_gray(gray_row_decoded,'biber/biber_decoded_gray_row.bmp')
+
+encoded_shapes.append(len(gray_row_encoded))
 
 gray_col_encoded = image_codec.encode_image_rowcol(color_gray[0], g_row, g_col, 'col')
-np.savetxt('biber_gray_encode_col.txt', gray_col_encoded, fmt='%d',newline=' ')
-bw_col_decoded = image_codec.decode_image_rowcol('biber_gray_encode_col.txt','col')
-image_codec.save_as_image_gray(bw_col_decoded,'biber_decoded_gray_col.bmp')
+np.savetxt('biber/biber_gray_encode_col.txt', gray_col_encoded, fmt='%d',newline=' ')
+bw_col_decoded = image_codec.decode_image_rowcol('biber/biber_gray_encode_col.txt','col')
+image_codec.save_as_image_gray(bw_col_decoded,'biber/biber_decoded_gray_col.bmp')
+
+encoded_shapes.append(len(gray_col_encoded))
+
+
+gray_zig, gray_zig_encoded = image_codec.encode_zigzag(color_gray[0])
+np.savetxt('biber/biber_gray_encode_zigzag.txt', gray_zig_encoded, fmt='%d',newline=' ')
+gray_zig_decoded = image_codec.decode_zigzag('biber/biber_gray_encode_zigzag.txt')
+image_codec.save_as_image_gray(gray_zig_decoded,'biber/biber_decoded_gray_zigzag.bmp')
+
+encoded_shapes.append(len(gray_zig_encoded))
+
 
 '''
 BLACK AND WHITE
@@ -89,20 +114,32 @@ BLACK AND WHITE
 color_bw = cv2.split(im_bw)
 (bw_channel, bw_row, bw_col) = np.shape(color_bw)
 
+original_shapes.append(rgb_row * rgb_col * 1)
+
 bw_row_encoded = image_codec.encode_image_rowcol(color_bw[0], bw_row, bw_col, 'row')
-np.savetxt('biber_bw_encode_row.txt', bw_row_encoded, fmt='%d',newline=' ')
-bw_row_decoded = image_codec.decode_image_rowcol('biber_bw_encode_row.txt','row')
-image_codec.save_as_image_gray(bw_row_decoded,'biber_decoded_bw_row.bmp')
+np.savetxt('biber/biber_bw_encode_row.txt', bw_row_encoded, fmt='%d',newline=' ')
+bw_row_decoded = image_codec.decode_image_rowcol('biber/biber_bw_encode_row.txt','row')
+image_codec.save_as_image_gray(bw_row_decoded,'biber/biber_decoded_bw_row.bmp')
+
+encoded_shapes.append(len(bw_row_encoded))
 
 bw_col_encoded = image_codec.encode_image_rowcol(color_bw[0], bw_row, bw_col, 'col')
-np.savetxt('biber_bw_encode_col.txt', bw_col_encoded, fmt='%d',newline=' ')
-bw_col_decoded = image_codec.decode_image_rowcol('biber_bw_encode_col.txt','col')
-image_codec.save_as_image_gray(bw_col_decoded,'biber_decoded_bw_col.bmp')
+np.savetxt('biber/biber_bw_encode_col.txt', bw_col_encoded, fmt='%d',newline=' ')
+bw_col_decoded = image_codec.decode_image_rowcol('biber/biber_bw_encode_col.txt','col')
+image_codec.save_as_image_gray(bw_col_decoded,'biber/biber_decoded_bw_col.bmp')
+
+encoded_shapes.append(len(bw_col_encoded))
 
 bw_zig, bw_zig_encoded = image_codec.encode_zigzag(color_bw[0])
-np.savetxt('biber_bw_encode_zigzag.txt', bw_zig_encoded, fmt='%d',newline=' ')
-bw_zig_decoded = image_codec.decode_zigzag('biber_bw_encode_zigzag.txt')
-image_codec.save_as_image_gray(bw_zig_decoded,'biber_decoded_bw_zigzag.bmp')
+np.savetxt('biber/biber_bw_encode_zigzag.txt', bw_zig_encoded, fmt='%d',newline=' ')
+bw_zig_decoded = image_codec.decode_zigzag('biber/biber_bw_encode_zigzag.txt')
+image_codec.save_as_image_gray(bw_zig_decoded,'biber/biber_decoded_bw_zigzag.bmp')
+
+encoded_shapes.append(len(bw_zig_encoded))
+
+np.savetxt('biber/biber_org.txt', original_shapes, fmt='%d')
+np.savetxt('biber/biber_enc.txt', encoded_shapes, fmt='%d')
+
 
 cv2.imshow('bw', im_bw)
 cv2.imshow('image', im_color)
